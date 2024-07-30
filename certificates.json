@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "name": "dan",
+    "regno": "1111",
+    "course": "Specs",
+    "created_at": "2024-07-30 02:40:25.571212592 +0300 EAT m=+300.637851013",
+    "hash": "c278334a410d92ed35a70c20f97e1e07f2afcc837d88486ceeaf54eb3e16c89a"
+  },
+  {
+    "id": 2,
+    "name": "denil",
+    "regno": "007",
+    "course": "ugali",
+    "created_at": "2024-07-30 02:48:50.598323751 +0300 EAT m=+805.664962187",
+    "hash": "14639bc0d4fb29de0f6db2b43591c3511846447d60637606a6549fd6786be9fc"
+  }
+]
