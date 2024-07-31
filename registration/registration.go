@@ -5,6 +5,10 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"os"
+	"time"
+	"math/rand"
+	"fmt"
+	
 )
 
 type Register struct {
@@ -50,6 +54,46 @@ var (
 	requestsFile     = "requests.json"
 	adminFile        = "admins.json"
 )
+func AddRequest(request CertificateRequest) {
+    request.ID = GenerateUniqueID() // Implement this function
+    requests = append(requests, request)
+}
+func GetPendingRequests() []CertificateRequest {
+    var pendingRequests []CertificateRequest
+    for _, req := range requests {
+        if req.Status == "Pending" {
+            pendingRequests = append(pendingRequests, req)
+        }
+    }
+    return pendingRequests
+}
+
+func GetRequest(id int) (CertificateRequest, error) {
+    for _, req := range requests {
+        if req.ID == id {
+            return req, nil
+        }
+    }
+    return CertificateRequest{}, fmt.Errorf("request not found")
+}
+
+func UpdateRequestStatus(id int, status string) error {
+    for i, req := range requests {
+        if req.ID == id {
+            requests[i].Status = status
+            return nil
+        }
+    }
+    return fmt.Errorf("request not found")
+}
+func GenerateUniqueID() int {
+    t := time.Now()
+    timestamp := t.UnixNano()
+    rand.Seed(time.Now().UnixNano())
+    randomNum := rand.Intn(1000) // Generate a random number between 0 and 1000
+    uniqueID := int(timestamp) + randomNum
+    return uniqueID
+}
 
 // SaveCertificates function saves the certificates to a storage (e.g., a file or database)
 func SaveCertificates(certificates []Certificate) error {

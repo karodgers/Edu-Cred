@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDU-Cred: Node Dashboard - {{.NodeID}}</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --bg-color: #ecf0f1;
+            --text-color: #34495e;
+            --table-header-bg: #34495e;
+            --table-odd-row: #f9f9f9;
+            --table-hover: #e0f7fa;
+            --shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            --approve-color: #27ae60;
+            --reject-color: #e74c3c;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            opacity: 1; /* Ensure no fading out */
+        }
+
+        .dashboard-container {
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            opacity: 1; /* Ensure no fading out */
+        }
+
+        h1, h2 {
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-top: 2rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 20px;
+            background-color: #ffffff;
+            box-shadow: var(--shadow);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            background-color: var(--table-header-bg);
+            color: #ffffff;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tr:nth-child(even) {
+            background-color: var(--table-odd-row);
+        }
+
+        tr:hover {
+            background-color: var(--table-hover);
+            transition: background-color 0.3s ease;
+        }
+
+        .approve, .reject {
+            padding: 8px 15px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .approve {
+            background-color: var(--approve-color);
+            color: #ffffff;
+        }
+
+        .reject {
+            background-color: var(--reject-color);
+            color: #ffffff;
+        }
+
+        .approve:hover, .reject:hover {
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 1.5rem;
+            }
+
+            table {
+                font-size: 14px;
+            }
+
+            th, td {
+                padding: 10px;
+            }
+
+            .approve, .reject {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container" style="opacity: 1;">
+        <h1>Node Dashboard - {{.NodeID}}</h1>
+        <h2>Pending Requests</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Registration Number</th>
+                    <th>Course</th>
+                    <th>Created At</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range .Requests}}
+                <tr>
+                    <td>{{.Name}}</td>
+                    <td>{{.RegNo}}</td>
+                    <td>{{.Course}}</td>
+                    <td>{{.CreatedAt}}</td>
+                    <td>
+                        <form action="/process-request" method="POST" style="display: inline;">
+                            <input type="hidden" name="nodeId" value="{{$.NodeID}}">
+                            <input type="hidden" name="requestId" value="{{.ID}}">
+                            <input type="hidden" name="action" value="approve">
+                            <input type="submit" value="Approve" class="approve">
+                        </form>
+                        <form action="/process-request" method="POST" style="display: inline;">
+                            <input type="hidden" name="nodeId" value="{{$.NodeID}}">
+                            <input type="hidden" name="requestId" value="{{.ID}}">
+                            <input type="hidden" name="action" value="reject">
+                            <input type="submit" value="Reject" class="reject">
+                        </form>
+                    </td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const buttons = document.querySelectorAll('.approve, .reject');
+            buttons.forEach(button => {
+                button.addEventListener('mouseenter', () => {
+                    gsap.to(button, {duration: 0.3, scale: 1.05, y: -2});
+                });
+                button.addEventListener('mouseleave', () => {
+                    gsap.to(button, {duration: 0.3, scale: 1, y: 0});
+                });
+            });
+        });
+    </script>
+</body>
+</html>

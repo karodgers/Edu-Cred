@@ -54,20 +54,21 @@ func NewBlockchain() *Blockchain {
 		Certificates: []Certificate{},
 	}
 }
-
+// newCert.Hash = GenerateHash(&newCert)
 // AddBlock adds the block to the blockchain
-func (bc *Blockchain) AddBlock(cert string) {
-	prevCert := bc.Certificates[len(bc.Certificates)-1]
-	newCert := Certificate{
-		ID:        prevCert.ID + 1,
-		Name:      cert,
-		PrevHash:  prevCert.Hash,
-		TimeStamp: time.Now().String(),
-	}
-	newCert.Hash = GenerateHash(&newCert)
-	bc.Certificates = append(bc.Certificates, newCert)
-}
+// In blockchain/blockchain.go
 
+func (bc *Blockchain) AddBlock(cert string) {
+    prevCert := bc.Certificates[len(bc.Certificates)-1]
+    newCert := Certificate{
+        ID:        prevCert.ID + 1,
+        Name:      cert,
+        PrevHash:  prevCert.Hash,
+        TimeStamp: time.Now().String(),
+    }
+    newCert.Hash = GenerateHash(&newCert)
+    bc.Certificates = append(bc.Certificates, newCert)
+}
 // SaveBlocks saves blockchain data to the JSON file
 func (bc *Blockchain) SaveBlocks() error {
 	data, err := json.MarshalIndent(bc, "", "  ")

@@ -1,32 +1,203 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Registration </title>
-    <link rel="stylesheet" href="/templates/css/style.css">
-</head>
-<body>
-    <form action="/admin-registration" method="POST">
-        <label for="name"> Full Name</label>
-        <input type="text" id="name" name="name" required>
-        <br>
-        <label for="adminid">Admin ID:</label>
-        <input type="text" id="adminid" name="adminid" required> 
-        <br>
-        <label for="department">Department:</label>
-        <input type="text" id="department" name="department" required> 
-        <br>
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
-        <br>
-        <label for="phone">Phone Number:</label>
-        <input type="text" id="phone" name="phone" required> 
-        <br>
-        <label for="password">Password:</label>
-        <input type="password" id="pass" name="pass" required> 
-        <br>
-        <button type="submit">Register</button>
-    </form>
-</body>
-</html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>EDU-Cred: Admin Registration</title><style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+    
+    :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #34495e;
+        --accent-color: #e74c3c;
+        --bg-color: #ecf0f1;
+        --text-color: #2c3e50;
+        --input-bg: #ffffff;
+        --shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    body {
+        font-family: 'Montserrat', sans-serif;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+    }
+    
+    .container {
+        width: 100%;
+        max-width: 500px;
+        padding: 2rem;
+    }
+    
+    .form-container {
+        background-color: #ffffff;
+        border-radius: 15px;
+        box-shadow: var(--shadow);
+        padding: 2.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .form-container::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(45deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        opacity: 0.1;
+        z-index: 0;
+        transform: rotate(45deg);
+    }
+    
+    h1 {
+        color: var(--primary-color);
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+        text-align: center;
+        font-weight: 700;
+        position: relative;
+    }
+    
+    form {
+        display: grid;
+        gap: 1.5rem;
+        position: relative;
+    }
+    
+    label {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--secondary-color);
+        display: block;
+    }
+    
+    input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 1rem;
+        background-color: var(--input-bg);
+        transition: all 0.3s ease;
+    }
+    
+    input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(44, 62, 80, 0.2);
+    }
+    
+    button {
+        background-color: var(--primary-color);
+        color: #ffffff;
+        border: none;
+        border-radius: 8px;
+        padding: 0.75rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 1rem;
+    }
+    
+    button:hover {
+        background-color: var(--secondary-color);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(44, 62, 80, 0.3);
+    }
+    
+    @media (max-width: 600px) {
+        .container {
+            padding: 1rem;
+        }
+    
+        .form-container {
+            padding: 2rem;
+        }
+    
+        h1 {
+            font-size: 2rem;
+        }
+    }
+    </style></head><body>
+        <div class="container">
+            <div class="form-container">
+                <h1>Admin Registration</h1>
+                <form action="/admin-registration" method="POST">
+                    <div>
+                        <label for="full-name">Full Name</label>
+                        <input type="text" id="full-name" name="full-name" required placeholder="Enter your full name">
+                    </div>
+                    <div>
+                        <label for="admin-id">Admin ID</label>
+                        <input type="text" id="admin-id" name="admin-id" required placeholder="Enter your admin ID">
+                    </div>
+                    <div>
+                        <label for="department">Department</label>
+                        <input type="text" id="department" name="department" required placeholder="Enter your department">
+                    </div>
+                    <div>
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required placeholder="Enter your email address">
+                    </div>
+                    <div>
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" required placeholder="Enter your phone number">
+                    </div>
+                    <div>
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required placeholder="Create a strong password">
+                    </div>
+                    <button type="submit">Register</button>
+                </form>
+            </div>
+        </div>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+        <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // Animate form container
+            gsap.from(".form-container", {duration: 1, opacity: 0, y: 30, ease: "power3.out"});
+    
+            // Animate form elements
+            gsap.from("h1, input, button", {
+                duration: 0.8,
+                opacity: 0,
+                y: 20,
+                stagger: 0.1,
+                delay: 0.5,
+                ease: "power3.out"
+            });
+    
+            // Add focus and blur effects to inputs
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.addEventListener('focus', () => {
+                    gsap.to(input, {duration: 0.3, scale: 1.02, borderColor: "#2c3e50", ease: "power2.out"});
+                });
+                input.addEventListener('blur', () => {
+                    gsap.to(input, {duration: 0.3, scale: 1, borderColor: "#e0e0e0", ease: "power2.out"});
+                });
+            });
+    
+            // Add hover effect to button
+            const button = document.querySelector('button');
+            button.addEventListener('mouseenter', () => {
+                gsap.to(button, {duration: 0.3, backgroundColor: "#34495e", scale: 1.05});
+            });
+            button.addEventListener('mouseleave', () => {
+                gsap.to(button, {duration: 0.3, backgroundColor: "#2c3e50", scale: 1});
+            });
+    
+            // Animate background gradient
+            gsap.to(".form-container::before", {
+                duration: 20,
+                rotation: 360,
+                repeat: -1,
+                ease: "none"
+            });
+        });
+        </script>
+    </body></html>

@@ -3,6 +3,9 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"text/template"
+	"time"
+
 	"student-certificate-validation/handler"
 	"student-certificate-validation/p2p"
 	"student-certificate-validation/registration"
@@ -42,9 +45,11 @@ func main() {
 	node3.AddPeer("node1", "localhost:8001")
 	node3.AddPeer("node2", "localhost:8002")
 
-	node1.StartServer()
-	node2.StartServer()
-	node3.StartServer()
+	go node1.StartServer()
+	go node2.StartServer()
+	go node3.StartServer()
+
+	// Keep the main goroutine alive
 
 	// Modify the AdminProcessCertificateHandler to use the P2P network
 	handler.SetNode(node1) // Use node1 for demonstration
@@ -53,7 +58,35 @@ func main() {
 	http.HandleFunc("/register", handler.RegisterStudentHandler)
 	http.HandleFunc("/login", handler.LoginStudent)
 	http.HandleFunc("/student-dashboard", handler.StudentDashboardHandler)
-	http.HandleFunc("/request-certificate", handler.StudentCertificateRequestHandler)
+	http.HandleFunc("/request-certificate", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == http.MethodGet {
+			tmpl, _ := template.ParseFiles("templates/student_request.html")
+			tmpl.Execute(w, nil)
+		} else if r.Method == http.MethodPost {
+			name := r.FormValue("name")
+			regNo := r.FormValue("regno")
+			course := r.FormValue("course")
+
+			request := p2p.CertificateRequest{
+				ID:        registration.GenerateUniqueID(), // Implement this function to generate a unique integer ID
+				Name:      name,
+				RegNo:     regNo,
+				Course:    course,
+				CreatedAt: time.Now().Format(time.RFC3339),
+				Status:    "Pending",
+			}
+
+			// Add request to all nodes
+			node1.AddRequest(request)
+			node2.AddRequest(request)
+			node3.AddRequest(request)
+
+			// Broadcast request to all nodes
+			node1.BroadcastRequest(request)
+
+			http.Redirect(w, r, "/request-success", http.StatusSeeOther)
+		}
+	})
 	http.HandleFunc("/view-download", handler.CertificateHandler)
 	http.HandleFunc("/view-request", handler.ViewRequestHandler)
 	http.HandleFunc("/admin-dashboard", handler.AdminDashboardHandler)
@@ -69,4 +102,5 @@ func main() {
 	fmt.Println("- http://localhost:8003")
 
 	http.ListenAndServe(":1234", nil)
+	select {}
 }

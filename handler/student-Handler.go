@@ -35,12 +35,6 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	temp.Execute(w, nil)
 }
 
-// func StudentDashboardHandler(w http.ResponseWriter, r *http.Request) {
-// 	temp := template.Must(template.ParseFiles("templates/student.html"))
-// 	temp.Execute(w, nil)
-// }
-
-// LoginStudent handles student login
 func LoginStudent(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		temp := template.Must(template.ParseFiles("templates/login.html"))
@@ -58,6 +52,8 @@ func LoginStudent(w http.ResponseWriter, r *http.Request) {
 		if std.RegNo == reg && std.Password == pass {
 			http.Redirect(w, r, "/request-certificate", http.StatusSeeOther)
 			return
+		} else {
+			http.Error(w, "INVALID REGISTRATION NUMBER or PASSWORD", http.StatusUnauthorized)
 		}
 	}
 	http.Error(w, "INVALID REGISTRATION NUMBER or PASSWORD", http.StatusUnauthorized) // Corrected error message text
@@ -218,80 +214,85 @@ func CertificateHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // AdminProcessCertificateHandler handles processing of certificate requests by admin
+// In handler/handler.go
+
 func AdminProcessCertificateHandler(w http.ResponseWriter, r *http.Request) {
-	idStr := r.URL.Query().Get("id")
-	if idStr == "" {
-		http.Error(w, "ID not provided", http.StatusBadRequest)
-		return
-	}
-	id, err := strconv.Atoi(idStr)
-	if err != nil {
-		http.Error(w, "Invalid ID", http.StatusBadRequest)
-		return
-	}
+    idStr := r.URL.Query().Get("id")
+    if idStr == "" {
+        http.Error(w, "ID not provided", http.StatusBadRequest)
+        return
+    }
+    id, err := strconv.Atoi(idStr)
+    if err != nil {
+        http.Error(w, "Invalid ID", http.StatusBadRequest)
+        return
+    }
 
-	requestMutex.Lock()
-	defer requestMutex.Unlock()
+    requestMutex.Lock()
+    defer requestMutex.Unlock()
 
-	var request *registration.CertificateRequest
-	for i := range requests {
-		if requests[i].ID == id {
-			request = &requests[i]
-			break
-		}
-	}
-	if request == nil {
-		http.Error(w, "Request not found", http.StatusNotFound)
-		return
-	}
+    var request *registration.CertificateRequest
+    for i := range requests {
+        if requests[i].ID == id {
+            request = &requests[i]
+            break
+        }
+    }
+    if request == nil {
+        http.Error(w, "Request not found", http.StatusNotFound)
+        return
+    }
 
-	if request.Status != "Pending" {
-		http.Error(w, "Request already processed", http.StatusBadRequest)
-		return
-	}
+    if request.Status != "Pending" {
+        http.Error(w, "Request already processed", http.StatusBadRequest)
+        return
+    }
 
-	// Update status and generate certificate
-	request.Status = "Completed"
-	certificate := registration.Certificate{
-		ID:        len(certificates) + 1,
-		Name:      request.Name,
-		RegNo:     request.RegNo,
-		Course:    request.Course,
-		CreatedAt: time.Now().String(),
-	}
+    // Update status and generate certificate
+    request.Status = "Completed"
+    certificate := registration.Certificate{
+        ID:        len(certificates) + 1,
+        Name:      request.Name,
+        RegNo:     request.RegNo,
+        Course:    request.Course,
+        CreatedAt: time.Now().String(),
+    }
 
-	// Use the P2P node to mine a new block
-	node.MineBlock(certificate.Name)
-	newBlock := node.Blockchain.Certificates[len(node.Blockchain.Certificates)-1]
-	certificate.Hash = newBlock.Hash
+    // Instead of mining, propose a new block
+    node.ProposeBlock(certificate.Name)
 
-	// Append the certificate to the certificates list
-	certificates = append(certificates, certificate)
+    // Wait for the block to be approved and added to the blockchain
+    // This is a simplified approach; you might want to implement a more robust waiting mechanism
+    time.Sleep(5 * time.Second)
 
-	// Generate the PDF
-	filePath, err := pdfgenerator.GeneratePDF(certificate, certificate.Hash)
-	if err != nil {
-		http.Error(w, "Error generating PDF", http.StatusInternalServerError)
-		return
-	}
+    // Get the latest block from the blockchain
+    latestBlock := node.Blockchain.Certificates[len(node.Blockchain.Certificates)-1]
+    certificate.Hash = latestBlock.Hash
 
-	// Save the updated requests and certificates
-	if err := registration.SaveRequests(requests); err != nil {
-		http.Error(w, "Error saving requests", http.StatusInternalServerError)
-		return
-	}
+    // Append the certificate to the certificates list
+    certificates = append(certificates, certificate)
 
-	if err := registration.SaveCertificates(certificates); err != nil {
-		http.Error(w, "Error saving certificates", http.StatusInternalServerError)
-		return
-	}
+    // Generate the PDF
+    filePath, err := pdfgenerator.GeneratePDF(certificate, certificate.Hash)
+    if err != nil {
+        http.Error(w, "Error generating PDF", http.StatusInternalServerError)
+        return
+    }
 
-	// The blockchain is now managed by the P2P network, so we don't need to save it here
+    // Save the updated requests and certificates
+    if err := registration.SaveRequests(requests); err != nil {
+        http.Error(w, "Error saving requests", http.StatusInternalServerError)
+        return
+    }
 
-	// Send the PDF back to the student (for simplicity, we'll provide a download link)
-	http.Redirect(w, r, "/download?file="+filePath, http.StatusSeeOther)
+    if err := registration.SaveCertificates(certificates); err != nil {
+        http.Error(w, "Error saving certificates", http.StatusInternalServerError)
+        return
+    }
+
+    // Send the PDF back to the student (for simplicity, we'll provide a download link)
+    http.Redirect(w, r, "/download?file="+filePath, http.StatusSeeOther)
 }
-
 // StudentDashboardHandler renders the student dashboard page.
 func StudentDashboardHandler(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("templates/student.html"))

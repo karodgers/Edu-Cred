@@ -1,16 +1,178 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-    <link rel="stylesheet" href="/templates/css/style.css">
-</head>
-<body>
-    <h1> THE MAIN PAGE  </h1>
-    <H2> student section</H2>
-    <p><a href="/login">Login</a> or <a href="/register">Register</a></p>
-    <h2> Admin section </h2>
-    <p><a href="/admin-login">Login</a> or <a href="/admin-registration">Register</a></p>
-</body>
-</html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>EDU-Cred: Your Academic Gateway</title><style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap');
+    
+    :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #e74c3c;
+        --accent-color: #3498db;
+        --bg-color: #ecf0f1;
+        --text-color: #34495e;
+    }
+    
+    body {
+        font-family: 'Montserrat', sans-serif;
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+    }
+    
+    .container {
+        background-color: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        padding: 3rem;
+        width: 90%;
+        max-width: 900px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .form-container {
+        text-align: center;
+        position: relative;
+        z-index: 1;
+    }
+    
+    h1 {
+        color: var(--primary-color);
+        font-size: 3.5rem;
+        margin-bottom: 2rem;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        font-weight: 700;
+    }
+    
+    .logo {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 1rem;
+    }
+    
+    .sections-container {
+        display: flex;
+        justify-content: space-between;
+        gap: 2rem;
+    }
+    
+    .section {
+        flex: 1;
+        padding: 2rem;
+        background-color: var(--bg-color);
+        border-radius: 15px;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+    
+    .section:hover {
+        transform: translateY(-5px);
+        border-color: var(--accent-color);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    h2 {
+        color: var(--secondary-color);
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+        font-weight: 600;
+    }
+    
+    .button {
+        display: inline-block;
+        padding: 12px 24px;
+        background-color: var(--accent-color);
+        color: #ffffff;
+        text-decoration: none;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin: 0.5rem;
+        border: 2px solid var(--accent-color);
+    }
+    
+    .button:hover {
+        background-color: #ffffff;
+        color: var(--accent-color);
+    }
+    
+    @media (max-width: 768px) {
+        .container {
+            padding: 2rem;
+        }
+    
+        h1 {
+            font-size: 2.5rem;
+        }
+    
+        .sections-container {
+            flex-direction: column;
+        }
+    
+        .section {
+            margin-bottom: 1rem;
+        }
+    }
+    </style></head><body>
+        <div class="container">
+            <div class="form-container">
+                <svg class="logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="45" fill="#3498db"/>
+                    <path d="M30 70 L50 30 L70 70 Z" fill="#ffffff"/>
+                    <circle cx="50" cy="75" r="10" fill="#e74c3c"/>
+                </svg>
+                <h1>EDU-Cred</h1>
+    
+                <div class="sections-container">
+                    <div class="section">
+                        <h2>Students</h2>
+                        <a href="/login" class="button">Login</a>
+                        <a href="/register" class="button">Register</a>
+                    </div>
+    
+                    <div class="section">
+                        <h2>Administrators</h2>
+                        <a href="/admin-login" class="button">Login</a>
+                        <a href="/admin-registration" class="button">Register</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+        <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // Animate elements on load
+            gsap.from(".logo", {duration: 1, opacity: 0, y: -50, rotation: 360, ease: "elastic.out(1, 0.5)"});
+            gsap.from("h1", {duration: 1, opacity: 0, y: 30, delay: 0.5, ease: "power3.out"});
+            gsap.from(".section", {duration: 1, opacity: 0, x: index => index ? 50 : -50, stagger: 0.2, delay: 1, ease: "power3.out"});
+    
+            // Hover effects for sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.addEventListener('mouseenter', () => {
+                    gsap.to(section, {duration: 0.3, backgroundColor: "#d5d8dc", scale: 1.05});
+                });
+                section.addEventListener('mouseleave', () => {
+                    gsap.to(section, {duration: 0.3, backgroundColor: "#ecf0f1", scale: 1});
+                });
+            });
+    
+            // Button hover effect
+            const buttons = document.querySelectorAll('.button');
+            buttons.forEach(button => {
+                button.addEventListener('mouseenter', () => {
+                    gsap.to(button, {duration: 0.3, backgroundColor: "#ffffff", color: "#3498db", scale: 1.05});
+                });
+                button.addEventListener('mouseleave', () => {
+                    gsap.to(button, {duration: 0.3, backgroundColor: "#3498db", color: "#ffffff", scale: 1});
+                });
+            });
+        });
+        </script>
+    </body></html>

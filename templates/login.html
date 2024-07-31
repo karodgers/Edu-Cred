@@ -1,100 +1,196 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" href="/templates/css/style.css">
-    <style>
-        body, html {
-    height: 100%;
-    margin: 0;
-    font-family: Arial, sans-serif;
-}
-
-.container {
-    background: url("/templates/image/pexels-pixabay-531880.jpg") no-repeat center center fixed;
-    background-size: cover;
-
-    height: 100%;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5); /* Dark overlay with 50% opacity */
-    z-index: 1;
-}
-
-.form-container {
-    position: relative;
-    z-index: 2;
-    background: rgba(255, 255, 255, 0.9); /* White background with 90% opacity */
-    padding: 20px;
-
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-}
-
-label {
-    display: block;
-    margin-top: 10px;
-    font-weight: bold;
-}
-
-input {
-    width: calc(100% - 20px);
-    padding: 10px;
-    margin-top: 5px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-button {
-    padding: 10px 20px;
-    margin-top: 10px;
-    border: none;
-    background-color: #007BFF;
-    color: white;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-
-p {
-    margin-top: 15px;
-}
-
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="form-container">
-            <h1>Login</h1>
-            <form method="POST" action="/login">
-                <label for="regno">Registration No:</label>
-                <input type="text" id="regno" name="regno" required>
-                <br>
-                <label for="pass">Password:</label>
-                <input type="password" id="pass" name="pass" required>
-                <br>
-                <button type="submit">Login</button>
-            </form>
-            <p>Don't have an account? <a href="/register">Register</a></p>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>EDU-Cred: Student Login</title><style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    
+    :root {
+        --primary-color: #4a90e2;
+        --secondary-color: #34495e;
+        --accent-color: #e74c3c;
+        --bg-color: #f0f3f5;
+        --text-color: #2c3e50;
+        --input-bg: #ffffff;
+        --shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    body {
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+    }
+    
+    .container {
+        width: 100%;
+        max-width: 400px;
+        padding: 2rem;
+    }
+    
+    .form-container {
+        background-color: #ffffff;
+        border-radius: 15px;
+        box-shadow: var(--shadow);
+        padding: 2.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .form-container::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, var(--primary-color) 0%, rgba(74, 144, 226, 0) 70%);
+        opacity: 0.1;
+        z-index: 0;
+    }
+    
+    h1 {
+        color: var(--primary-color);
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+        text-align: center;
+        font-weight: 700;
+        position: relative;
+    }
+    
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        position: relative;
+    }
+    
+    label {
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        color: var(--secondary-color);
+        display: block;
+    }
+    
+    input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 1rem;
+        background-color: var(--input-bg);
+        transition: all 0.3s ease;
+    }
+    
+    input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+    }
+    
+    button {
+        background-color: var(--primary-color);
+        color: #ffffff;
+        border: none;
+        border-radius: 8px;
+        padding: 0.75rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 1rem;
+    }
+    
+    button:hover {
+        background-color: #3a7bc8;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3);
+    }
+    
+    .form-footer {
+        text-align: center;
+        margin-top: 2rem;
+        font-size: 0.9rem;
+    }
+    
+    .form-footer a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.3s ease;
+    }
+    
+    .form-footer a:hover {
+        color: var(--accent-color);
+    }
+    
+    @media (max-width: 480px) {
+        .container {
+            padding: 1rem;
+        }
+    
+        .form-container {
+            padding: 2rem;
+        }
+    
+        h1 {
+            font-size: 2rem;
+        }
+    }
+    </style></head><body>
+        <div class="container">
+            <div class="form-container">
+                <h1>Student Login</h1>
+                <form method="POST" action="/login">
+                    <div>
+                        <label for="reg-no">Registration Number</label>
+                        <input type="text" id="reg-no" name="reg-no" required placeholder="Enter your registration number">
+                    </div>
+                    <div>
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required placeholder="Enter your password">
+                    </div>
+                    <button type="submit">Login</button>
+                </form>
+                <div class="form-footer">
+                    <p>Don't have an account? <a href="/register">Register</a></p>
+                </div>
+            </div>
         </div>
-    </div>
-</body>
-</html>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+        <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // Animate form container
+         
+            // Add focus and blur effects to inputs
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.addEventListener('focus', () => {
+                    gsap.to(input, {duration: 0.3, scale: 1.02, borderColor: "#4a90e2", ease: "power2.out"});
+                });
+                input.addEventListener('blur', () => {
+                    gsap.to(input, {duration: 0.3, scale: 1, borderColor: "#e0e0e0", ease: "power2.out"});
+                });
+            });
+    
+            // Add hover effect to button
+            const button = document.querySelector('button');
+            button.addEventListener('mouseenter', () => {
+                gsap.to(button, {duration: 0.3, backgroundColor: "#3a7bc8", scale: 1.05});
+            });
+            button.addEventListener('mouseleave', () => {
+                gsap.to(button, {duration: 0.3, backgroundColor: "#4a90e2", scale: 1});
+            });
+    
+            // Animate radial gradient
+            gsap.to(".form-container::before", {
+                duration: 10,
+                rotation: 360,
+                repeat: -1,
+                ease: "none"
+            });
+        });
+        </script>
+    </body></html>
